@@ -93,6 +93,25 @@ router.put("/:id", (req, res) => {
         })
 })
 
-router.delete("/:id", (req, res) => {})
+router.delete("/:id", (req, res) => {
+  const { id } = req.params
+  db("zoos")
+    .where({ id })
+    .del()
+    .catch(_err => {
+      res.status(500).json({
+        message: "Error deleting zoo."
+      })
+    })
+    .then(num => {
+      num == 0
+        ? res.status(404).json({
+            message: "Invalid ID."
+          })
+        : res.status(200).json({
+            message: "Zoo was deleted"
+          })
+    })
+})
 
 module.exports = router
